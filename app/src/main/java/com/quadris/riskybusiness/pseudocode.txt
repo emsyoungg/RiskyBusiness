@@ -1,0 +1,166 @@
+Logging in Algorithm:
+
+btnLogin = #connect to XML button
+email = INPUT("email: ")
+password = INPUT("password: ")
+WHILE btnLogin #pressed
+    IF email = "" THEN
+        PRINT("Please enter email")
+    ELIF password = "" THEN
+        PRINT("Please enter password")
+    ElSE:
+        successful = authenticate(email, password) #Returns boolean
+        IF successful == TRUE THEN
+            PRINT("Login successful")
+            #moves to menu class
+        ELSE
+            PRINT("Login unsuccessful, try again")
+        ENDIF
+    ENDIF
+ENDWHILE
+
+
+
+Registering in Algorithm:
+
+btnRegister = #connect to XML button
+email = INPUT("email: ")
+password = INPUT("password: ")
+WHILE btnRegister #pressed
+    IF email = "" THEN
+        PRINT("Please enter email")
+    ELIF password = "" THEN
+        PRINT("Please enter password")
+    ElSE
+        successful = register(email, password) #Returns boolean
+        IF successful == TRUE THEN
+            PRINT("Register successful, please login")
+        ELSE
+            PRINT("Register unsuccessful, try again")
+        ENDIF
+    ENDIF
+ENDWHILE
+
+
+Creating database function:
+
+FUNCTION onCreate(sqLiteDatabase)
+    createTable = "create table assessmentTable(assessmentID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                      "customerName STRING," +
+                                      "position STRING, " +
+                                      "location STRING, " +
+                                      "dateReported STRING, " +
+                                      "timeReported STRING, " +
+                                      "details STRING, " +
+                                      "reportedTo STRING, " +
+                                      "reviewedBy STRING, " +
+                                      "escalated STRING, " +
+                                      "dateEscalated STRING," +
+                                      "actionTaken STRING," +
+                                      "assessmentChanges STRING," +
+                                      "changesDate STRING" +
+                                      ");"
+                          RETURN sqLiteDatabase.execSQL(createTable)
+ENDFUNCTION
+
+
+
+function to create a pdf:
+#will use itext library import
+FUNCTION getPDF()
+    pdfPath = STR(getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
+    file = new File(pdfPath, "RiskAssessment.pdf");
+    TRY
+        file = OPENAPPEND (“RiskAssessment.PDF”)
+
+    EXCEPT I/OERROR
+        PRINT (“File not found”)
+
+    ELSE
+        title = "QUADRIS LTD RISK ASSESSOR"
+        table = [
+                     [ ‘Name’, ’Position’, ’Location’ ],
+                     [ customerName, position, location ]
+                 ]
+        file.WRITELINE(title)
+        file.WRITELINE(table)
+
+        file.CLOSE()
+ENDFUNCTION
+
+
+Create an assessment:
+
+name = INPUT("Name: ")
+position = INPUT("position: ")
+location = INPUT("Location: ")
+hazardDate = INPUT("Hazard date: ")
+hazardTime = INPUT("Hazard time: ")
+details = INPUT("Details: ")
+reportedTo = INPUT("Reported to: ")
+reviewedBy = INPUT("Reviewed by: ")
+escalated = ("Escalated? ")
+IF escalated == "Yes" THEN
+    dateEscalated = INPUT("Date Escalated: ")
+    actionTaken = INPUT("Action Taken: ")
+    assessmentChanges = INPUT("Assessment Changes: ")
+    changesDate = INPUT("Changes Date: ")
+ELSE
+    dateEscalated = "N/A"
+    actionTaken = "N/A"
+    assessmentChanges = "N/A"
+    changesDate = "N/A"
+ENDIF
+saveToDatabase(name, position, location, hazardDate, hazardTime, details, reportedTo,
+               reviewedBy, escalated, dateEscalated, actionTaken, assessmentChanges, changesDate)
+
+
+Save to database function:
+
+FUNCTION saveToDatabase(customerName: STR, position: STR, location: STR, hazardDate: STR,
+                 hazardTime: STR, details: STR, reportedTo: STR, reviewedBy: STR,
+                 escalated: STR, dateEscalated: STR, actionTaken: STR, assessmentChanges: STR,
+                 changesDate: STR)
+
+    successful = insert(customerName, position, location, hazardDate, hazardTime,
+            details, reportedTo, reviewedBy, escalated, dateEscalated, actionTaken,
+             assessmentChanges, changesDate) #returns boolean whether data was added to database
+    IF successful == TRUE THEN
+        PRINT("Data added")
+        TRY
+            getPDF()
+            PRINT("PDF created")
+            #move to PDFViewer page
+        EXCEPT I/OERROR
+            PRINT (“Error creating PDF”)
+    ELSE
+        PRINT("Data failed to add to database")
+    ENDIF
+ENDFUNCTION
+
+
+PDFviewer:
+
+IMPORT com.github.barteksc.pdfviewer.PDFView
+pdfview = #connect to XML file
+TRY
+    file = OPENREAD("/storage/emulated/0/Download/RiskAssessment.pdf")
+    pdfView.fromFile(file).load() #loads file into XMLview
+
+EXCEPT I/OERROR
+    PRINT (“File not found”)
+
+
+Function to get the ID and dates of previous risk assessments:
+
+FUNCTION getListContents()
+    sqLiteDatabase = this.writableDatabase
+    RETURN  sqLiteDatabase.RAWQUERY("SELECT assessmentID, dateReported FROM assessmentTable")
+ENDFUNCTION
+
+Function to return a record from the database when ID is selected:
+
+FUNCTION getRowByID(assessmentID: Char)
+        sqLiteDatabase = this.writableDatabase
+        RETURN  sqLiteDatabase.RAWQUERY("SELECT * FROM assessmentTable WHERE assessmentID=$assessmentID")
+ENDFUNCTION

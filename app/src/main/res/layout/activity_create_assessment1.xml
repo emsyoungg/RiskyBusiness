@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".CreateAssessment1"
+        >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="100dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAssessmentDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/greeny"
+                android:paddingVertical="15dp"
+                android:shadowColor="@color/black"
+                android:shadowDx="1.5"
+                android:shadowDy="1.3"
+                android:shadowRadius="1.6"
+                android:text="Assessment details"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@color/greeny"
+                android:padding="20dp"
+                android:shadowColor="@color/black"
+                android:shadowDx="1.5"
+                android:shadowDy="1.3"
+                android:shadowRadius="1.6"
+                android:text="The Management of Health and Safety at Work Regulations 1999 requires us as an employer to assess risks - we need to make sure we know about the main risks in the workplace and the things to do to manage them responsibly.
+            \n \n We aim to do everything reasonably practicable to protect our people by making our workplace free from harm and by making adaptations where necessary, as soon as reasonably practicable. \n \n By collaborating, you are helping us all manage Health &amp; Safety by: \n - helping us spot workplace risks; \n - making sure health ane safety controls are practical; \n - increasing the level of commitment to working in a safe and healthy way.
+
+"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/tvAssessmentDetails" />
+        </LinearLayout>
+    </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_marginHorizontal="1dp"
+            >
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_margin="1dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_weight="1"
+                android:backgroundTint="@color/dark_grey"
+                android:paddingVertical="20dp"/>
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="Next"
+                android:layout_weight="1"
+                android:backgroundTint="@color/dark_grey"
+                android:paddingVertical="20dp"/>
+
+
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
